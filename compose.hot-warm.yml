@@ -1,0 +1,273 @@
+services:
+
+  # Coordinating node (dedicated)
+  os00:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m" 
+      node.name: os00
+      node.roles: ''
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os00/os00.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os00/os00.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os00/os00.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os00/os00.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data0:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+    ports:
+      - 9200:9200
+      - 9600:9600
+
+  # Master node (dedicated)
+  os01:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms512m -Xmx512m" 
+      node.name: os01
+      node.roles: 'master'
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os01/os01.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os01/os01.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os01/os01.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os01/os01.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data1:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+  
+  # Ingest & Data (hot) node
+  os02:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m" 
+      node.name: os02
+      node.roles: 'ingest, data'
+      node.attr.temp: hot
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os02/os02.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os02/os02.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os02/os02.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os02/os02.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data2:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+  
+  os03:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m" 
+      node.name: os03
+      node.roles: 'ingest, data'
+      node.attr.temp: hot
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os03/os03.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os03/os03.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os03/os03.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os03/os03.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data3:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+  
+  os04:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m" 
+      node.name: os04
+      node.roles: 'ingest, data'
+      node.attr.temp: hot
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os04/os04.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os04/os04.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os04/os04.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os04/os04.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data4:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+  
+  # Data (warm) node
+  os05:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m" 
+      node.name: os05
+      node.roles: 'data'
+      node.attr.temp: warm
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os05/os05.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os05/os05.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os05/os05.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os05/os05.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data5:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+  
+  # Data (warm) node
+  os06:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m" 
+      node.name: os06
+      node.roles: 'data'
+      node.attr.temp: warm
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os06/os06.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os06/os06.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os06/os06.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os06/os06.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data6:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+  
+  os07:
+    restart: always
+    image: opensearchproject/opensearch:2.17.1
+    environment:
+      OPENSEARCH_JAVA_OPTS: "-Xms1024m -Xmx1024m" 
+      node.name: os07
+      node.roles: 'data'
+      node.attr.temp: warm
+      discovery.seed_hosts: os00,os01,os02,os03,os04,os05,os06,os07
+      cluster.initial_master_nodes: os01
+      plugins.security.ssl.transport.pemkey_filepath: certificates/os07/os07.key
+      plugins.security.ssl.transport.pemcert_filepath: certificates/os07/os07.pem
+      plugins.security.ssl.http.pemkey_filepath: certificates/os07/os07.key
+      plugins.security.ssl.http.pemcert_filepath: certificates/os07/os07.pem
+      DISABLE_INSTALL_DEMO_CONFIG: "true"
+      JAVA_HOME: /usr/share/opensearch/jdk
+      bootstrap.memory_lock: "true"
+      network.host: "0.0.0.0"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "1"
+    volumes:
+      - "./opensearch.yml:/usr/share/opensearch/config/opensearch.yml"
+      - "os-data7:/usr/share/opensearch/data"
+      - "./certs:/usr/share/opensearch/config/certificates:ro"
+
+volumes:
+  os-data0:
+  os-data1:
+  os-data2:
+  os-data3:
+  os-data4:
+  os-data5:
+  os-data6:
+  os-data7:
